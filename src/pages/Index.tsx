@@ -31,7 +31,7 @@ const SERVICES = [
   {
     icon: "Trophy",
     title: "Exam Preparation",
-    desc: "Targeted prep for SAT, ACT, AP exams, and standardized tests with proven strategies and practice materials.",
+    desc: "Focused prep for high school exams across all Canadian curriculum subjects, helping students feel confident and ready.",
   },
 ];
 
@@ -45,7 +45,7 @@ const TESTIMONIALS = [
   {
     name: "James R.",
     role: "College Freshman",
-    text: "The SAT prep sessions were incredibly focused. I raised my score by 180 points — couldn't have done it without AB Tutoring.",
+    text: "The exam prep sessions were incredibly focused. My son improved dramatically — couldn't have done it without AB Tutoring.",
     initials: "JR",
   },
   {
@@ -63,20 +63,34 @@ export default function Index() {
     email: "",
     phone: "",
     subject: "",
-    date: "",
-    type: "free-consultation",
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setMenuOpen(false);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch("https://functions.poehali.dev/07c06aee-679c-4f82-bec6-ca6c741cca6a", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error("Failed to send");
+      setSubmitted(true);
+    } catch {
+      setError("Something went wrong. Please try again or email us directly.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -254,7 +268,7 @@ export default function Index() {
               style={{ backgroundImage: `url(${HERO_IMAGE})` }}
             />
             <div className="absolute top-5 -right-5 text-white rounded-xl shadow-lg px-5 py-4" style={{ background: "hsl(158,52%,42%)" }}>
-              <div className="font-display text-2xl font-bold">10+</div>
+              <div className="font-display text-2xl font-bold">5+</div>
               <div className="font-body text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.8)" }}>Years of Excellence</div>
             </div>
           </div>
@@ -366,7 +380,7 @@ export default function Index() {
             <div className="mt-10 flex flex-col gap-5">
               {[
                 { icon: "Phone", label: "587-938-9852" },
-                { icon: "Mail", label: "hello@abtutoring.com" },
+                { icon: "Mail", label: "contactabtutoring@gmail.com" },
                 { icon: "MapPin", label: "Available online only" },
                 { icon: "Clock", label: "Mon–Sat, 8am–9pm" },
               ].map(({ icon, label }) => (
@@ -400,28 +414,7 @@ export default function Index() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                <h3 className="font-display text-xl font-bold mb-1" style={{ color: "hsl(213,72%,28%)" }}>Book a Session</h3>
-
-                <div className="flex gap-3 bg-muted rounded-xl p-1">
-                  {[
-                    { val: "free-consultation", label: "Free Consultation" },
-                    { val: "appointment", label: "Schedule Appointment" },
-                  ].map(({ val, label }) => (
-                    <button
-                      key={val}
-                      type="button"
-                      onClick={() => setForm({ ...form, type: val })}
-                      className="flex-1 font-body text-xs font-medium py-2 rounded-lg transition-all"
-                      style={
-                        form.type === val
-                          ? { background: "hsl(213,72%,28%)", color: "white" }
-                          : { color: "hsl(215,20%,46%)" }
-                      }
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
+                <h3 className="font-display text-xl font-bold mb-1" style={{ color: "hsl(213,72%,28%)" }}>Request a Free Consultation</h3>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
@@ -475,18 +468,6 @@ export default function Index() {
                   </div>
                 </div>
 
-                {form.type === "appointment" && (
-                  <div>
-                    <label className="font-body text-xs font-medium mb-1 block" style={{ color: "hsl(213,72%,28%)" }}>Preferred Date & Time</label>
-                    <input
-                      type="datetime-local"
-                      value={form.date}
-                      onChange={(e) => setForm({ ...form, date: e.target.value })}
-                      className="w-full border border-border rounded-lg px-3 py-2.5 font-body text-sm focus:outline-none"
-                    />
-                  </div>
-                )}
-
                 <div>
                   <label className="font-body text-xs font-medium mb-1 block" style={{ color: "hsl(213,72%,28%)" }}>Tell us more (optional)</label>
                   <textarea
@@ -498,13 +479,18 @@ export default function Index() {
                   />
                 </div>
 
+                {error && (
+                  <p className="font-body text-xs text-red-500 text-center">{error}</p>
+                )}
+
                 <button
                   type="submit"
-                  className="text-white font-body font-semibold py-3.5 rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2 mt-1"
+                  disabled={loading}
+                  className="text-white font-body font-semibold py-3.5 rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2 mt-1 disabled:opacity-60"
                   style={{ background: "hsl(158,52%,42%)" }}
                 >
-                  <Icon name="Send" size={16} />
-                  {form.type === "free-consultation" ? "Request Free Consultation" : "Schedule Appointment"}
+                  <Icon name={loading ? "Loader" : "Send"} size={16} />
+                  {loading ? "Sending..." : "Request Free Consultation"}
                 </button>
 
                 <p className="font-body text-xs text-muted-foreground text-center">

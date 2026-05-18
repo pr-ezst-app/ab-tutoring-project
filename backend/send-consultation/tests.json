@@ -1,0 +1,19 @@
+{
+  "tests": [
+    {
+      "name": "Send consultation request",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "name": "Test User",
+        "email": "test@example.com",
+        "phone": "587-555-1234",
+        "subject": "Mathematics",
+        "message": "Looking for help with Grade 10 algebra."
+      },
+      "expectedStatus": 200,
+      "expectedBody": { "success": true },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
