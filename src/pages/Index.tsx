@@ -10,10 +10,6 @@ const SUBJECTS = [
   { icon: "FlaskConical", label: "Science" },
   { icon: "BookOpen", label: "English" },
   { icon: "Globe", label: "History" },
-  { icon: "Code2", label: "Computer Science" },
-  { icon: "Languages", label: "Foreign Languages" },
-  { icon: "Music", label: "Music Theory" },
-  { icon: "Palette", label: "Art" },
 ];
 
 const SERVICES = [
@@ -369,9 +365,9 @@ export default function Index() {
             </p>
             <div className="mt-10 flex flex-col gap-5">
               {[
-                { icon: "Phone", label: "+1 (555) 123-4567" },
+                { icon: "Phone", label: "587-938-9852" },
                 { icon: "Mail", label: "hello@abtutoring.com" },
-                { icon: "MapPin", label: "Available online & in your area" },
+                { icon: "MapPin", label: "Available online only" },
                 { icon: "Clock", label: "Mon–Sat, 8am–9pm" },
               ].map(({ icon, label }) => (
                 <div key={label} className="flex items-center gap-4">
