@@ -1,8 +1,6 @@
 import json
 import os
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+import urllib.request
 
 
 def handler(event: dict, context) -> dict:
@@ -34,9 +32,6 @@ def handler(event: dict, context) -> dict:
             'body': json.dumps({'error': 'Name and email are required'})
         }
 
-    gmail_user = 'contactabtutoring@gmail.com'
-    gmail_password = os.environ['GMAIL_APP_PASSWORD']
-
     html_body = f"""
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <div style="background: #1a3d6e; padding: 24px; border-radius: 12px 12px 0 0;">
@@ -58,16 +53,26 @@ def handler(event: dict, context) -> dict:
     </div>
     """
 
-    msg = MIMEMultipart('alternative')
-    msg['Subject'] = f'New Consultation Request — {name}'
-    msg['From'] = gmail_user
-    msg['To'] = gmail_user
-    msg['Reply-To'] = email
-    msg.attach(MIMEText(html_body, 'html'))
+    payload = json.dumps({
+        "from": "AB Tutoring <onboarding@resend.dev>",
+        "to": ["contactabtutoring@gmail.com"],
+        "reply_to": email,
+        "subject": f"New Consultation Request — {name}",
+        "html": html_body
+    }).encode("utf-8")
 
-    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-        server.login(gmail_user, gmail_password)
-        server.sendmail(gmail_user, gmail_user, msg.as_string())
+    req = urllib.request.Request(
+        "https://api.resend.com/emails",
+        data=payload,
+        headers={
+            "Authorization": f"Bearer {os.environ['RESEND_API_KEY']}",
+            "Content-Type": "application/json"
+        },
+        method="POST"
+    )
+
+    with urllib.request.urlopen(req) as resp:
+        resp.read()
 
     return {
         'statusCode': 200,
