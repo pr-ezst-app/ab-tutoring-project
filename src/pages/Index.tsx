@@ -7,9 +7,13 @@ const NAV_LINKS = ["Home", "About", "Services", "Subjects", "Contact"];
 
 const SUBJECTS = [
   { icon: "Calculator", label: "Mathematics" },
-  { icon: "FlaskConical", label: "Science" },
+  { icon: "FlaskConical", label: "Physics" },
+  { icon: "Microscope", label: "Biology" },
+  { icon: "TestTube2", label: "Chemistry" },
   { icon: "BookOpen", label: "English" },
   { icon: "Globe", label: "History" },
+  { icon: "BookMarked", label: "Social Studies" },
+  { icon: "Atom", label: "Science" },
 ];
 
 const SERVICES = [
@@ -343,7 +347,9 @@ export default function Index() {
                 <div key={name} className="rounded-2xl p-6 border border-border hover-lift" style={{ background: "hsl(213,60%,96%)" }}>
                   <div className="flex gap-1 mb-4">
                     {[...Array(5)].map((_, i) => (
-                      <Icon key={i} name="Star" size={14} style={{ color: "hsl(158,52%,42%)" }} />
+                      <svg key={i} width="14" height="14" viewBox="0 0 24 24" fill="hsl(158,52%,42%)" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
+                      </svg>
                     ))}
                   </div>
                   <p className="font-body text-foreground text-sm leading-relaxed mb-5">"{text}"</p>
