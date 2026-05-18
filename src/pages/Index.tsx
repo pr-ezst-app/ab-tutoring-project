@@ -381,7 +381,7 @@ export default function Index() {
               {[
                 { icon: "Phone", label: "587-938-9852" },
                 { icon: "Mail", label: "contactabtutoring@gmail.com" },
-                { icon: "MapPin", label: "Available online only" },
+                { icon: "MapPin", label: "Available online" },
                 { icon: "Clock", label: "Mon–Sat, 8am–9pm" },
               ].map(({ icon, label }) => (
                 <div key={label} className="flex items-center gap-4">
