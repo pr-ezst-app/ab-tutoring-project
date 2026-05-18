@@ -62,39 +62,9 @@ const TESTIMONIALS = [
 
 export default function Index() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    subject: "",
-    message: "",
-  });
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setMenuOpen(false);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    try {
-      const res = await fetch("https://functions.poehali.dev/07c06aee-679c-4f82-bec6-ca6c741cca6a", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      if (!res.ok) throw new Error("Failed to send");
-      setSubmitted(true);
-    } catch {
-      setError("Something went wrong. Please try again or email us directly.");
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -371,139 +341,34 @@ export default function Index() {
 
       {/* CONTACT */}
       <section id="contact" className="py-24" style={{ background: "linear-gradient(135deg, hsl(213,72%,22%) 0%, hsl(213,65%,16%) 100%)" }}>
-        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-start">
-          <div>
-            <div className="inline-flex items-center gap-2 text-xs font-body font-semibold px-3 py-1.5 rounded-full mb-6" style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.8)" }}>
-              <Icon name="Calendar" size={13} />
-              Schedule a Session
-            </div>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-white leading-snug">
-              Start your journey to academic success
-            </h2>
-            <p className="mt-5 font-body leading-relaxed" style={{ color: "rgba(255,255,255,0.7)" }}>
-              Book a free 30-minute consultation and let's find the perfect tutoring plan for your student.
-            </p>
-            <div className="mt-10 flex flex-col gap-5">
-              {[
-                { icon: "Phone", label: "587-938-9852" },
-                { icon: "Mail", label: "contactabtutoring@gmail.com" },
-                { icon: "MapPin", label: "Available online" },
-                { icon: "Clock", label: "Mon–Sat, 8am–9pm" },
-              ].map(({ icon, label }) => (
-                <div key={label} className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "rgba(255,255,255,0.1)" }}>
-                    <Icon name={icon} size={18} className="text-white" style={{ opacity: 0.8 }} />
-                  </div>
-                  <span className="font-body text-sm" style={{ color: "rgba(255,255,255,0.8)" }}>{label}</span>
-                </div>
-              ))}
-            </div>
+        <div className="max-w-3xl mx-auto px-6 text-center">
+          <div className="inline-flex items-center gap-2 text-xs font-body font-semibold px-3 py-1.5 rounded-full mb-6" style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.8)" }}>
+            <Icon name="MessageCircle" size={13} />
+            Get in Touch
           </div>
-
-          <div className="bg-white rounded-2xl p-8 shadow-2xl">
-            {submitted ? (
-              <div className="text-center py-10">
-                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5" style={{ background: "hsl(158,40%,94%)" }}>
-                  <Icon name="CheckCircle2" size={32} style={{ color: "hsl(158,52%,42%)" }} />
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-white leading-snug">
+            Ready to get started?
+          </h2>
+          <p className="mt-5 font-body leading-relaxed mb-12" style={{ color: "rgba(255,255,255,0.7)" }}>
+            Reach out directly and we'll get back to you as soon as possible.
+          </p>
+          <div className="grid sm:grid-cols-2 gap-4 max-w-xl mx-auto">
+            {[
+              { icon: "Phone", label: "587-938-9852", sub: "Call or text anytime" },
+              { icon: "Mail", label: "contactabtutoring@gmail.com", sub: "We reply within 24 hours" },
+              { icon: "MapPin", label: "Available online", sub: "Sessions via video call" },
+              { icon: "Clock", label: "Mon–Sat, 8am–9pm", sub: "Flexible scheduling" },
+            ].map(({ icon, label, sub }) => (
+              <div key={label} className="flex items-center gap-4 rounded-2xl p-5 text-left" style={{ background: "rgba(255,255,255,0.08)" }}>
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "rgba(255,255,255,0.12)" }}>
+                  <Icon name={icon} size={18} className="text-white" />
                 </div>
-                <h3 className="font-display text-xl font-bold mb-2" style={{ color: "hsl(213,72%,28%)" }}>Request Sent!</h3>
-                <p className="font-body text-muted-foreground text-sm">
-                  Thank you! We'll be in touch within 24 hours to confirm your appointment.
-                </p>
-                <button
-                  onClick={() => setSubmitted(false)}
-                  className="mt-6 font-body text-sm underline"
-                  style={{ color: "hsl(158,52%,42%)" }}
-                >
-                  Submit another request
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                <h3 className="font-display text-xl font-bold mb-1" style={{ color: "hsl(213,72%,28%)" }}>Request a Free Consultation</h3>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="font-body text-xs font-medium mb-1 block" style={{ color: "hsl(213,72%,28%)" }}>Full Name *</label>
-                    <input
-                      required
-                      type="text"
-                      placeholder="Jane Smith"
-                      value={form.name}
-                      onChange={(e) => setForm({ ...form, name: e.target.value })}
-                      className="w-full border border-border rounded-lg px-3 py-2.5 font-body text-sm focus:outline-none"
-                      style={{ focusRingColor: "hsl(158,52%,42%)" } as React.CSSProperties}
-                    />
-                  </div>
-                  <div>
-                    <label className="font-body text-xs font-medium mb-1 block" style={{ color: "hsl(213,72%,28%)" }}>Email *</label>
-                    <input
-                      required
-                      type="email"
-                      placeholder="jane@email.com"
-                      value={form.email}
-                      onChange={(e) => setForm({ ...form, email: e.target.value })}
-                      className="w-full border border-border rounded-lg px-3 py-2.5 font-body text-sm focus:outline-none"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="font-body text-xs font-medium mb-1 block" style={{ color: "hsl(213,72%,28%)" }}>Phone</label>
-                    <input
-                      type="tel"
-                      placeholder="(555) 000-0000"
-                      value={form.phone}
-                      onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                      className="w-full border border-border rounded-lg px-3 py-2.5 font-body text-sm focus:outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="font-body text-xs font-medium mb-1 block" style={{ color: "hsl(213,72%,28%)" }}>Subject</label>
-                    <select
-                      value={form.subject}
-                      onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                      className="w-full border border-border rounded-lg px-3 py-2.5 font-body text-sm focus:outline-none bg-white"
-                    >
-                      <option value="">Select subject</option>
-                      {SUBJECTS.map(({ label }) => (
-                        <option key={label} value={label}>{label}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
                 <div>
-                  <label className="font-body text-xs font-medium mb-1 block" style={{ color: "hsl(213,72%,28%)" }}>Tell us more (optional)</label>
-                  <textarea
-                    rows={3}
-                    placeholder="Grade level, specific topics, goals..."
-                    value={form.message}
-                    onChange={(e) => setForm({ ...form, message: e.target.value })}
-                    className="w-full border border-border rounded-lg px-3 py-2.5 font-body text-sm focus:outline-none resize-none"
-                  />
+                  <div className="font-body font-semibold text-white text-sm">{label}</div>
+                  <div className="font-body text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.55)" }}>{sub}</div>
                 </div>
-
-                {error && (
-                  <p className="font-body text-xs text-red-500 text-center">{error}</p>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="text-white font-body font-semibold py-3.5 rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2 mt-1 disabled:opacity-60"
-                  style={{ background: "hsl(158,52%,42%)" }}
-                >
-                  <Icon name={loading ? "Loader" : "Send"} size={16} />
-                  {loading ? "Sending..." : "Request Free Consultation"}
-                </button>
-
-                <p className="font-body text-xs text-muted-foreground text-center">
-                  We'll confirm within 24 hours. No commitment required.
-                </p>
-              </form>
-            )}
+              </div>
+            ))}
           </div>
         </div>
       </section>
